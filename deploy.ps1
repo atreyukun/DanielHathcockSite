@@ -36,7 +36,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $remoteUrl = "https://github.com/$GitHubUser/$RepoName.git"
-if (-not (git remote get-url origin 2>$null)) {
+$hasOrigin = git remote 2>$null | Select-String -Pattern '^origin$' -Quiet
+if (-not $hasOrigin) {
   git remote add origin $remoteUrl
 }
 
@@ -69,6 +70,6 @@ Write-Host "Cloudflare DNS (replace the tunnel CNAME for '$Domain'):"
 Write-Host "  Type: CNAME"
 Write-Host "  Name: site"
 Write-Host "  Target: $GitHubUser.github.io"
-Write-Host "  Proxy: DNS only (grey cloud) — required for GitHub Pages SSL"
+Write-Host "  Proxy: DNS only (grey cloud) - required for GitHub Pages SSL"
 Write-Host ""
-Write-Host "Then in GitHub repo Settings > Pages, confirm custom domain is: $Domain"
+Write-Host ('Then in GitHub repo Settings - Pages, confirm custom domain is: ' + $Domain)
