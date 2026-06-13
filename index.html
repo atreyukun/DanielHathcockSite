@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Hathcock — CTO, Portal 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14181F;
+    --ink-soft: #1D232D;
+    --paper: #ECE7DC;
+    --paper-dim: #B9B6AC;
+    --copper: #C17F4A;
+    --sage: #7FA38A;
+    --line: rgba(236, 231, 220, 0.14);
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Source Serif 4', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--copper); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* Corner registration marks */
+  .reg-mark {
+    position: fixed;
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--paper-dim);
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .reg-mark::before, .reg-mark::after {
+    content: '';
+    position: absolute;
+    background: var(--paper-dim);
+  }
+  .reg-mark::before { top: 50%; left: -6px; right: -6px; height: 1px; transform: translateY(-50%); }
+  .reg-mark::after { left: 50%; top: -6px; bottom: -6px; width: 1px; transform: translateX(-50%); }
+  .reg-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+  .reg-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+  .reg-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+  .reg-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+
+  @media (max-width: 700px) {
+    .reg-mark { display: none; }
+  }
+
+  /* Nav */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(20, 24, 31, 0.88);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--paper);
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--copper); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .nav-links a { color: var(--paper-dim); }
+  .nav-links a:hover { color: var(--paper); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .nav-links { gap: 16px; font-size: 11px; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 100px 0 90px;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    background-position: center top;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  @media (max-width: 800px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero { padding: 70px 0 60px; }
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 26px;
+    height: 1px;
+    background: var(--sage);
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: clamp(40px, 6vw, 68px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 22px;
+  }
+
+  .hero-bio {
+    font-size: 19px;
+    color: var(--paper-dim);
+    max-width: 480px;
+    margin-bottom: 32px;
+  }
+  .hero-bio strong { color: var(--paper); font-weight: 600; }
+
+  .btn-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 13px 24px;
+    border: 1px solid var(--paper-dim);
+    color: var(--paper);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn:hover { border-color: var(--copper); background: rgba(193, 127, 74, 0.08); text-decoration: none; }
+  .btn-primary { border-color: var(--copper); background: rgba(193, 127, 74, 0.1); }
+
+  /* Hero portrait with annotations */
+  .portrait-frame {
+    position: relative;
+    border: 1px solid var(--line);
+    padding: 18px;
+  }
+  .portrait-frame img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    filter: grayscale(15%) contrast(1.05);
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--sage);
+    padding: 4px 10px;
+    position: absolute;
+  }
+  .tag-1 { top: -10px; left: 28px; }
+  .tag-2 { bottom: -10px; right: 28px; background: var(--copper); }
+
+  /* Section headers */
+  .section { padding: 90px 0; border-top: 1px solid var(--line); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 48px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .section-head h2 {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--paper-dim);
+    letter-spacing: 0.08em;
+  }
+
+  /* About cards */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  @media (max-width: 700px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--ink);
+    padding: 32px 28px;
+  }
+  .card .card-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 14px;
+  }
+  .card h3 { font-family: var(--mono); font-size: 19px; font-weight: 600; margin-bottom: 10px; }
+  .card p { color: var(--paper-dim); font-size: 16px; }
+
+  /* Build log (work + writing) */
+  .log-entry {
+    display: grid;
+    grid-template-columns: 110px 1fr auto;
+    gap: 24px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+  .log-entry:first-child { border-top: 1px solid var(--line); }
+  @media (max-width: 700px) {
+    .log-entry { grid-template-columns: 1fr; gap: 8px; }
+    .log-entry > a { display: none; }
+  }
+  .log-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sage);
+    padding-top: 4px;
+  }
+  .log-body h3 { font-family: var(--mono); font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .log-body p { color: var(--paper-dim); font-size: 16px; max-width: 540px; }
+  .log-link {
+    font-family: var(--mono);
+    font-size: 13px;
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 56px 0;
+  }
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  footer h2 {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    list-style: none;
+  }
+  .copyright {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--paper-dim);
+    margin-top: 40px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="reg-mark reg-tl"></div>
+<div class="reg-mark reg-tr"></div>
+<div class="reg-mark reg-bl"></div>
+<div class="reg-mark reg-br"></div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <span class="logo">D<span>.</span>HATHCOCK</span>
+      <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#writing">Writing</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">CTO, Portal 9</p>
+      <h1>Daniel<br>Hathcock</h1>
+      <p class="hero-bio">
+        I build the systems, teams, and products behind <strong>Portal 9</strong>.
+        Proud member of the <strong>Poarch Band of Creek Indians</strong>.
+        I write about the parts of leadership and engineering that don't usually
+        make it into the highlight reel.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#work">View work</a>
+        <a class="btn" href="https://portal9.io/">Portal 9 ↗</a>
+        <a class="btn" href="http://www.linkedin.com/in/daniel-hathcock-947222383">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="portrait-frame">
+      <span class="tag tag-1">Daniel Hathcock</span>
+      <img src="https://danielhathcock.com/wp-content/uploads/2026/05/cropped-Dan-300x250.jpg" alt="Portrait of Daniel Hathcock">
+      <span class="tag tag-2">CTO / Builder</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>About</h2>
+      <span class="section-num">001 — overview</span>
+    </div>
+    <div class="card-grid">
+      <div class="card reveal">
+        <p class="card-label">Role</p>
+        <h3>Leading Portal 9</h3>
+        <p>Engineering, product strategy, and the day-to-day decisions that keep a growing company moving.</p>
+      </div>
+      <div class="card reveal">
+        <p class="card-label">Heritage</p>
+        <h3>Poarch Band of Creek Indians</h3>
+        <p>A proud member of the Poarch Band of Creek Indians — part of how I think about community and craft.</p>
+      </div>
+      <div class="card reveal">
+        <p class="card-label">Outlook</p>
+        <h3>Failure, honestly</h3>
+        <p>Most people post their wins. I'd rather write about what didn't work, and what it taught me.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Build log</h2>
+      <span class="section-num">002 — work</span>
+    </div>
+
+    <div class="log-entry reveal">
+      <span class="log-tag">Platform</span>
+      <div class="log-body">
+        <h3>Portal 9</h3>
+        <p>The core product I lead as CTO — architecture, roadmap, and the engineering team behind it.</p>
+      </div>
+      <a class="log-link" href="https://portal9.io/">portal9.io ↗</a>
+    </div>
+
+    <div class="log-entry reveal">
+      <span class="log-tag">Growth</span>
+      <div class="log-body">
+        <h3>Scaling the team</h3>
+        <p>Notes on hiring, structure, and the technical decisions that scale — and the ones that don't.</p>
+      </div>
+      <a class="log-link" href="#writing">Read more</a>
+    </div>
+
+    <div class="log-entry reveal">
+      <span class="log-tag">Talks</span>
+      <div class="log-body">
+        <h3>Talks & interviews</h3>
+        <p>Conversations and talks on building products, leading teams, and staying close to the work.</p>
+      </div>
+      <a class="log-link" href="http://www.linkedin.com/in/daniel-hathcock-947222383">LinkedIn ↗</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="writing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Writing</h2>
+      <span class="section-num">003 — recent</span>
+    </div>
+
+    <div class="log-entry reveal">
+      <span class="log-tag">May 2026</span>
+      <div class="log-body">
+        <h3>This is a test</h3>
+        <p>It seems like everyone likes to post their wins. I don't usually see posts about failures. I could give a TED Talk on failure — or at least what I perceive as failure.</p>
+      </div>
+      <a class="log-link" href="https://danielhathcock.com/this-is-a-test/">Read ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="footer-row reveal">
+      <h2>Let's talk</h2>
+      <ul class="footer-links">
+        <li><a href="mailto:danielhathcock@gmail.com">Email</a></li>
+        <li><a href="http://www.linkedin.com/in/daniel-hathcock-947222383">LinkedIn ↗</a></li>
+        <li><a href="https://portal9.io/">Portal 9 ↗</a></li>
+      </ul>
+    </div>
+    <p class="copyright">© 2026 Daniel Hathcock — Daphne, Alabama</p>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
